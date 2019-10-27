@@ -1,0 +1,34 @@
+=
+{name -> First site}		#Name of the first site
+{url -> value}				#URL of the first site
++
+{option1 -> value}
+{option2 -> value}
+{option3 -> value}
+
+=
+{name -> Second site}		#Name of the second site
+{url -> value}				#URL of the second site
++
+{option1 -> value}
+{option2 -> value}
+
+==
+{name -> My super task}
+{second -> 10}				#Launches both http requests every 10 seconds
++
+(First site, Second site)
+
+== #Launch the HTTP request every 2min and 10 sec
+{name -> My easy task}
+{minute -> 2}
+{second -> 10}
++
+(First site)
+
+==
+#Launch the HTTP request every 6 hours
+{name -> My easy task}
+{hour -> 6}
++
+(Second site)
