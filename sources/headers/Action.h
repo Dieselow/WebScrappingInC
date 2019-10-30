@@ -10,3 +10,5 @@
 #endif //WEBSCRAPPINGINC_ACTION_H
 void getActionContent(FILE * file);
 int getActionNumber(char * string,int size);
+
+Action *fillActions(FILE *file, Action *actions, int sizeActions);

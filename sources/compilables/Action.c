@@ -24,8 +24,12 @@ void getActionContent(FILE *file) {
 
     }
     actionNumber = getActionNumber(fileContent, size);
-
+    fseek(file, 0, SEEK_SET);
     printf("%d", actionNumber);
+    Action *actions = malloc(sizeof(Action) * actionNumber);
+    actions = fillActions(file, actions, actionNumber);
+    printf("%s", actions[0].name);
+    printf("%s", actions[1].name);
     free(fileContent);
 
 }
@@ -42,4 +46,28 @@ int getActionNumber(char *string, int size) {
         }
     }
     return result;
+}
+
+Action *fillActions(FILE *file, Action *actions, int sizeActions) {
+    size_t len = 0;
+    ssize_t read;
+    char c = fgetc(file);
+    int action = 0;
+    while (c != EOF) {
+        int counter = 0;
+        if (c == '=') {
+            c = fgetc(file);
+            if (c != '=') {
+                read = getline(&actions[action].name, &len, file);
+                read = getline(&actions[action].url, &len, file);
+                action++;
+                counter++;
+            }
+        }
+        c = fgetc(file);
+        if (counter == sizeActions) {
+            break;
+        }
+    }
+    return actions;
 }
