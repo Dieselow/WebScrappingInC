@@ -28,7 +28,9 @@ void getActionContent(FILE *file) {
     Action *actions = malloc(sizeof(Action) * actionNumber);
     actions = fillActions(file, actions, actionNumber);
     printf("%s\n", actions[0].name);
+    printf("%s\n", actions[0].url);
     printf("%s\n", actions[1].name);
+    printf("%s", actions[1].url);
     free(fileContent);
 
 }
@@ -61,11 +63,7 @@ Action *fillActions(FILE *file, Action *actions, int sizeActions) {
                 }
                 counter++;
                 int startAction = ftell(file);
-                int paramsSize = 0;
-                while (c != '}') {
-                    c = fgetc(file);
-                    paramsSize++;
-                }
+                int paramsSize = getParamSize(file);
                 fseek(file, startAction, SEEK_SET);
                 c = fgetc(file);
                 if (counter == 1) {
@@ -80,26 +78,47 @@ Action *fillActions(FILE *file, Action *actions, int sizeActions) {
                             c = fgetc(file);
                         }
                     }
-                    currentAction++;
-                } else if (counter == 2) {
+                    counter++;
+                }
+                while (c != '>') {
+                    c = fgetc(file);
+                }
+                startAction = ftell(file);
+                paramsSize = getParamSize(file);
+                c = fgetc(file);
+                if (counter == 2) {
+                    fseek(file, startAction, SEEK_SET);
                     actions[currentAction].url = malloc(paramsSize * sizeof(char));
                     int i = 0;
                     while (c != '}') {
                         if (c != ' ') {
-                            c = fgetc(file);
                             actions[currentAction].url[i] = c;
                             i++;
-                        } else {
-                            c = fgetc(file);
                         }
+                        c = fgetc(file);
 
                     }
-                    currentAction++;
+
                 }
+                currentAction++;
 
             }
         }
         c = fgetc(file);
     }
     return actions;
+}
+
+int getParamSize(FILE *file) {
+    char c = fgetc(file);
+    int result = 0;
+    while (c != '}') {
+        if (c != ' ') {
+            result++;
+        }
+        c = fgetc(file);
+
+    }
+    return result;
+
 }

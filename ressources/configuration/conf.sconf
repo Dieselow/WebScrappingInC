@@ -1,6 +1,6 @@
 =
 {name -> First site}		#Name of the first site
-{url -> value}				#URL of the first site
+{url -> url}				#URL of the first site
 +
 {option1 -> value}
 {option2 -> value}
@@ -8,7 +8,7 @@
 
 =
 {name -> Second site}		#Name of the second site
-{url -> value}				#URL of the second site
+{url -> rul}				#URL of the second site
 +
 {option1 -> value}
 {option2 -> value}
