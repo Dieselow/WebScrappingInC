@@ -37,11 +37,13 @@ $$$$$$$$\ $$  /\$$\ $$ |  \$$$$  |
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <conio.h>
-#include "Application.h"
-#include "Color.h"
-#include "Interface.h"
+#include "../headers/Application.h"
+#include "../headers/Color.h"
+#include "../headers/Interface.h"
 
+/**
+ * Display the complete main menu
+ */
 void mainMenu(){
     int i = 0;
     char c = NULL;
@@ -76,7 +78,9 @@ void mainMenu(){
     printExit();
 
 }
-
+/**
+ * Print the main title
+ */
 void printTitle(){
     printf("\n\t\t\t _    _      _           _____                        \n"
             "\t\t\t| |  | |    | |         /  __ \\                                \n"
@@ -87,7 +91,9 @@ void printTitle(){
             "\t\t\t                                        | |   | |                \n"
             "\t\t\t                                        |_|   |_|                \n");
 }
-
+/**
+ * Print the exit message
+ */
 void printExit(){
     color(RED, BLACK);
     printf("\n\t\t\t\t\t$$$$$$$$\\           $$\\   $$\\     \n"
@@ -99,7 +105,9 @@ void printExit(){
            "\t\t\t\t\t$$$$$$$$\\ $$  /\\$$\\ $$ |  \\$$$$  |\n"
            "\t\t\t\t\t\\________|\\__/  \\__|\\__|   \\____/ \n\n\n\t\t\t\t    ");
 }
-
+/**
+ * Move the arrow in function of the user choice
+ */
 void printMenu(int i){
     system("cls");
     printTitle();
@@ -145,27 +153,22 @@ void printMenu(int i){
 
     }
 }
-
+/**
+ * Call functions selected by the user
+ */
 void printSubMenu(int i){
         switch(i){
         case 0:
             printf("\n\t\t\t\t\t-------  Onglet 1 -------\n");
-            /*printf("\n\t\t\t\t\t ==> • Onglet 1\n"
-                   "\t\t\t\t\t     • Onglet 2\n"
-                   "\t\t\t\t\t     • Onglet 3\n");*/
+
             break;
         case 1:
             printf("\n\t\t\t\t\t-------  Onglet 2 -------\n");
-            /*printf("\n\t\t\t\t\t     • Onglet 1\n"
-                   "\t\t\t\t\t ==> • Onglet 2\n"
-                   "\t\t\t\t\t     • Onglet 3\n");    */
+
             break;
         case 2:
             printf("\n\t\t\t\t\t-------  Onglet 3 -------\n");
-//            getConfFileContent();
-            /*printf("\n\t\t\t\t\t     • Onglet 1\n"
-                   "\t\t\t\t\t     • Onglet 2\n"
-                   "\t\t\t\t\t ==> • Onglet 3\n");    */
+
             break;
         default:
             printf("ERROR BAD CALL MAIN MENU");

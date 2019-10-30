@@ -6,8 +6,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <windows.h>
-#include "Application.h"
-#include "Interface.h"
+#include "../headers/Application.h"
+#include "../headers/Interface.h"
 
 /**
  * Start the main menu of the software
@@ -17,7 +17,7 @@ void start(){
 }
 
 /**
- * Change the color of the font and the background of 
+ * Change the color of the font and the background of
  * @param t     parameter to change the font color
  * @param f     parameter to change the background color
  */
