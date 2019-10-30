@@ -25,11 +25,10 @@ void getActionContent(FILE *file) {
     }
     actionNumber = getActionNumber(fileContent, size);
     fseek(file, 0, SEEK_SET);
-    printf("%d", actionNumber);
     Action *actions = malloc(sizeof(Action) * actionNumber);
     actions = fillActions(file, actions, actionNumber);
-    printf("%s", actions[0].name);
-    printf("%s", actions[1].name);
+    printf("%s\n", actions[0].name);
+    printf("%s\n", actions[1].name);
     free(fileContent);
 
 }
@@ -49,25 +48,58 @@ int getActionNumber(char *string, int size) {
 }
 
 Action *fillActions(FILE *file, Action *actions, int sizeActions) {
-    size_t len = 0;
-    ssize_t read;
     char c = fgetc(file);
-    int action = 0;
+    int currentAction = 0;
     while (c != EOF) {
         int counter = 0;
         if (c == '=') {
             c = fgetc(file);
             if (c != '=') {
-                read = getline(&actions[action].name, &len, file);
-                read = getline(&actions[action].url, &len, file);
-                action++;
+                c = fgetc(file);
+                while (c != '>') {
+                    c = fgetc(file);
+                }
                 counter++;
+                int startAction = ftell(file);
+                int paramsSize = 0;
+                while (c != '}') {
+                    c = fgetc(file);
+                    paramsSize++;
+                }
+                fseek(file, startAction, SEEK_SET);
+                c = fgetc(file);
+                if (counter == 1) {
+                    actions[currentAction].name = malloc(paramsSize * sizeof(char));
+                    int i = 0;
+                    while (c != '}') {
+                        if (c != ' ') {
+                            actions[currentAction].name[i] = c;
+                            c = fgetc(file);
+                            i++;
+                        } else {
+                            c = fgetc(file);
+                        }
+                    }
+                    currentAction++;
+                } else if (counter == 2) {
+                    actions[currentAction].url = malloc(paramsSize * sizeof(char));
+                    int i = 0;
+                    while (c != '}') {
+                        if (c != ' ') {
+                            c = fgetc(file);
+                            actions[currentAction].url[i] = c;
+                            i++;
+                        } else {
+                            c = fgetc(file);
+                        }
+
+                    }
+                    currentAction++;
+                }
+
             }
         }
         c = fgetc(file);
-        if (counter == sizeActions) {
-            break;
-        }
     }
     return actions;
 }
