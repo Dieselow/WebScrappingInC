@@ -70,13 +70,10 @@ Action *fillActions(FILE *file, Action *actions, int sizeActions) {
                     actions[currentAction].name = malloc(paramsSize * sizeof(char));
                     int i = 0;
                     while (c != '}') {
-                        if (c != ' ') {
                             actions[currentAction].name[i] = c;
                             c = fgetc(file);
                             i++;
-                        } else {
-                            c = fgetc(file);
-                        }
+
                     }
                     counter++;
                 }
@@ -90,11 +87,10 @@ Action *fillActions(FILE *file, Action *actions, int sizeActions) {
                     fseek(file, startAction, SEEK_SET);
                     actions[currentAction].url = malloc(paramsSize * sizeof(char));
                     int i = 0;
+                    c = fgetc(file);
                     while (c != '}') {
-                        if (c != ' ') {
-                            actions[currentAction].url[i] = c;
-                            i++;
-                        }
+                        actions[currentAction].url[i] = c;
+                        i++;
                         c = fgetc(file);
 
                     }
