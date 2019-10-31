@@ -1,5 +1,5 @@
 //
-// Created by Retr0 on 27/10/2019.
+// Created by Louis Dumont on 27/10/2019.
 //
 
 #include "../headers/Action.h"
@@ -35,6 +35,12 @@ void getActionContent(FILE *file) {
 
 }
 
+/**
+ * This function return the total number of actions in the file to malloc our Action array
+ * @param char* string
+ * @param int size
+ * @return int
+ */
 int getActionNumber(char *string, int size) {
     int result = 0;
     for (int i = 0; i < size; i++) {
@@ -49,6 +55,13 @@ int getActionNumber(char *string, int size) {
     return result;
 }
 
+/**
+ * This function is used to fill our Action array
+ * @param FILE file
+ * @param Action actions
+ * @param int sizeActions
+ * @return Action*
+ */
 Action *fillActions(FILE *file, Action *actions, int sizeActions) {
     char c = fgetc(file);
     int currentAction = 0;
@@ -70,10 +83,9 @@ Action *fillActions(FILE *file, Action *actions, int sizeActions) {
                     actions[currentAction].name = malloc(paramsSize * sizeof(char));
                     int i = 0;
                     while (c != '}') {
-                            actions[currentAction].name[i] = c;
-                            c = fgetc(file);
-                            i++;
-
+                        actions[currentAction].name[i] = c;
+                        c = fgetc(file);
+                        i++;
                     }
                     counter++;
                 }
@@ -92,12 +104,9 @@ Action *fillActions(FILE *file, Action *actions, int sizeActions) {
                         actions[currentAction].url[i] = c;
                         i++;
                         c = fgetc(file);
-
                     }
-
                 }
                 currentAction++;
-
             }
         }
         c = fgetc(file);
@@ -105,6 +114,11 @@ Action *fillActions(FILE *file, Action *actions, int sizeActions) {
     return actions;
 }
 
+/**
+ * This functions is used to get correct param size to malloc effectively
+ * @param FILE file
+ * @return int
+ */
 int getParamSize(FILE *file) {
     char c = fgetc(file);
     int result = 0;
@@ -113,7 +127,6 @@ int getParamSize(FILE *file) {
             result++;
         }
         c = fgetc(file);
-
     }
     return result;
 
