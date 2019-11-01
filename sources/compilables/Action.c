@@ -79,6 +79,7 @@ Action *fillActions(FILE *file, Action *actions, int sizeActions) {
                 int paramsSize = getParamSize(file);
                 fseek(file, startAction, SEEK_SET);
                 c = fgetc(file);
+                // this is the part for the name
                 if (counter == 1) {
                     actions[currentAction].name = malloc(paramsSize * sizeof(char));
                     int i = 0;
@@ -95,6 +96,7 @@ Action *fillActions(FILE *file, Action *actions, int sizeActions) {
                 startAction = ftell(file);
                 paramsSize = getParamSize(file);
                 c = fgetc(file);
+                // this is the part for the url
                 if (counter == 2) {
                     fseek(file, startAction, SEEK_SET);
                     actions[currentAction].url = malloc(paramsSize * sizeof(char));
@@ -106,6 +108,10 @@ Action *fillActions(FILE *file, Action *actions, int sizeActions) {
                         c = fgetc(file);
                     }
                 }
+                /**
+                 * TO-DO
+                 * Implement options part
+                 */
                 currentAction++;
             }
         }
@@ -131,3 +137,5 @@ int getParamSize(FILE *file) {
     return result;
 
 }
+
+
