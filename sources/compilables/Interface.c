@@ -37,9 +37,12 @@ $$$$$$$$\ $$  /\$$\ $$ |  \$$$$  |
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <windows.h>
+#include <conio.h>
 #include "../headers/Application.h"
 #include "../headers/Color.h"
 #include "../headers/Interface.h"
+#include "../headers/CurlApp.h"
 
 /**
  * Display the complete main menu
@@ -116,7 +119,7 @@ void printMenu(int i){
             color(LIGHT_GREEN, BLACK);
             printf("\n\t\t\t\t\t ==> ");
             color(WHITE, BLACK);
-            printf("• Onglet 1\n"
+            printf("• Quick Scrap\n"
                    "\t\t\t\t\t     • Onglet 2\n"
                    "\t\t\t\t\t     • Onglet 3\n");
             color(GREY, BLACK);
@@ -124,7 +127,7 @@ void printMenu(int i){
             color(WHITE, BLACK);
             break;
         case 1:
-            printf("\n\t\t\t\t\t     • Onglet 1\n"
+            printf("\n\t\t\t\t\t     • Quick Scrap\n"
                    "\t\t\t\t\t");
             color(LIGHT_GREEN, BLACK);
             printf(" ==> ");
@@ -136,7 +139,7 @@ void printMenu(int i){
             color(WHITE, BLACK);
             break;
         case 2:
-            printf("\n\t\t\t\t\t     • Onglet 1\n"
+            printf("\n\t\t\t\t\t     • Quick Scrap\n"
                    "\t\t\t\t\t     • Onglet 2\n"
                    "\t\t\t\t\t");
             color(LIGHT_GREEN, BLACK);
@@ -159,8 +162,14 @@ void printMenu(int i){
 void printSubMenu(int i){
         switch(i){
         case 0:
-            printf("\n\t\t\t\t\t-------  Onglet 1 -------\n");
-
+            system("cls");
+            printTitle();
+            printf("\n\t\t\t\t\t-------  Quick Scrap -------\n");
+            char url[500];
+            printf("\n\t\t\t\t\tEnter your url : ");
+            scanf("%s", url);
+            fflush(stdin);      //Drop the \n in the buffer
+            scrap(url);
             break;
         case 1:
             printf("\n\t\t\t\t\t-------  Onglet 2 -------\n");

@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-/* 
+/*
  * File:   Application.h
  * Author: Mikadows
  *
@@ -19,7 +19,7 @@ extern "C" {
 #endif
 
     void start();
-
+    void color(int t,int f);
 
 #ifdef __cplusplus
 }
