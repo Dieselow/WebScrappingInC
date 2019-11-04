@@ -34,7 +34,6 @@ $$$$$$$$\ $$  /\$$\ $$ |  \$$$$  |
 
 
  */
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <windows.h>
@@ -120,7 +119,7 @@ void printMenu(int i){
             printf("\n\t\t\t\t\t ==> ");
             color(WHITE, BLACK);
             printf("• Quick Scrap\n"
-                   "\t\t\t\t\t     • Onglet 2\n"
+                   "\t\t\t\t\t     • Start Cron Scrapping\n"
                    "\t\t\t\t\t     • Onglet 3\n");
             color(GREY, BLACK);
             printf("\n\n\t\t\t   (ESC to exit, naviagte with up and down arrow)\n");
@@ -132,7 +131,7 @@ void printMenu(int i){
             color(LIGHT_GREEN, BLACK);
             printf(" ==> ");
             color(WHITE, BLACK);
-            printf("• Onglet 2\n"
+            printf("• Start Cron Scrapping\n"
                    "\t\t\t\t\t     • Onglet 3\n");
             color(GREY, BLACK);
             printf("\n\n\t\t\t   (ESC to exit, naviagte with up and down arrow)\n");
@@ -140,7 +139,7 @@ void printMenu(int i){
             break;
         case 2:
             printf("\n\t\t\t\t\t     • Quick Scrap\n"
-                   "\t\t\t\t\t     • Onglet 2\n"
+                   "\t\t\t\t\t     • Start Cron Scrapping\n"
                    "\t\t\t\t\t");
             color(LIGHT_GREEN, BLACK);
             printf(" ==> ");
@@ -153,7 +152,6 @@ void printMenu(int i){
         default:
             printf("ERROR BAD CALL MAIN MENU");
             break;
-
     }
 }
 /**
@@ -172,7 +170,9 @@ void printSubMenu(int i){
             scrap(url);
             break;
         case 1:
-            printf("\n\t\t\t\t\t-------  Onglet 2 -------\n");
+            system("cls");
+            printTitle();
+            printf("\n\t\t\t\t-------  Start Cron Scrapping -------\n");
 
             break;
         case 2:
