@@ -6,6 +6,8 @@
 #include <stdio.h>
 #include <windows.h>
 #include "../headers/ThreadManagement.h"
+#include "../headers/Color.h"
+#include "../headers/Application.h"
 
 static int status = 0;  // 0 if enable | 1 if enable
 static HANDLE thread;
@@ -14,10 +16,11 @@ static HANDLE thread;
  *  Actions of the thread
  */
 DWORD WINAPI ThreadFunc() {
-  // Do stuff.  This will be the first function called on the new thread.
-  // When this function returns, the thread goes away.  See MSDN for more details.
-
-
+     while(1){
+       /**
+        * TODO : Add here the code scrap from the conf file
+        */
+     }
 
   return 0;
 }
@@ -28,11 +31,15 @@ void startThread(){
     if(status == 0){
         thread = CreateThread(NULL, 0, ThreadFunc, NULL, 0, NULL);
         if (thread) {
-            // Optionally do stuff, such as wait on the thread.
             status = 1;
+            color(LIGHT_GREEN, BLACK);
+            printf("\n\t\t\t\t\tCron is now activate\n\n");
+            color(WHITE, BLACK);
         }
     } else {
-        printf("Cron Scrapping already Activate\n\n");
+        color(RED, BLACK);
+        printf("\n\t\t\t\t\tCron Scrapping already Activate\n\n");
+        color(WHITE, BLACK);
     }
 }
 /**
@@ -41,11 +48,16 @@ void startThread(){
 void stopThread(){
     if(status == 1){
         if (thread) {
-            TerminateThread(thread, 0); // Dangerous source of errors!
+            TerminateThread(thread, 0);
             CloseHandle(thread);
             status = 0;
+            color(LIGHT_GREEN, BLACK);
+            printf("\n\t\t\t\t\tCron is now desactivate\n\n");
+            color(WHITE, BLACK);
         }
     } else {
-        printf("Cron Scrapping already Desactivate\n\n");
+        color(RED, BLACK);
+        printf("\n\t\t\t\t\tCron Scrapping already Desactivate\n\n");
+        color(WHITE, BLACK);
     }
 }

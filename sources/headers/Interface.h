@@ -24,6 +24,7 @@ extern "C" {
     void printMenu(int i);
     void printSubMenu(int i);
     void printSubMenuThread(int i);
+    void actionSelected(int i);
     void subMenuStartThread();
 
 #ifdef __cplusplus

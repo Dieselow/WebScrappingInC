@@ -42,6 +42,7 @@ $$$$$$$$\ $$  /\$$\ $$ |  \$$$$  |
 #include "../headers/Color.h"
 #include "../headers/Interface.h"
 #include "../headers/CurlApp.h"
+#include "../headers/ThreadManagement.h"
 
 /**
  * Display the complete main menu
@@ -219,6 +220,22 @@ void printSubMenuThread(int i){
     }
 }
 /**
+ * Call the functions of the selected action
+ */
+void actionSelected(int i){
+        switch(i){
+        case 0:
+            startThread();
+            break;
+        case 1:
+            stopThread();
+            break;
+        default:
+            printf("ERROR BAD CALL SUB MENU");
+            break;
+    }
+}
+/**
  * Selector for the menu
  */
 void subMenuStartThread(){
@@ -237,7 +254,8 @@ void subMenuStartThread(){
                 //printf("DOWN\n");
                 break;
             case '\r':    // code for enter
-                //printSubMenu(i);
+                actionSelected(i);
+                system("pause");
                 //printf("ENTER\n");
                 break;
         }
