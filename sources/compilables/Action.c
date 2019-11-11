@@ -107,11 +107,54 @@ Action *fillActions(FILE *file, Action *actions, int sizeActions) {
                         i++;
                         c = fgetc(file);
                     }
+
                 }
+                counter++;
                 /**
                  * TO-DO
                  * Implement options part
                  */
+                if (counter == 3) {
+                    while(c != '+') {
+                        c = fgetc(file);
+                    }
+                    int nbOption = 0;
+                    int startOption = ftell(file);
+                    while(c != '=' && c != EOF) {
+                        c = fgetc(file);
+                        if(c == '{') {
+                            nbOption++;
+                        }
+                    }
+                    fseek(file, startOption, SEEK_SET);
+                    actions[currentAction].options = malloc(sizeof(Option) * nbOption);
+                    int currentOption = 0;
+                    while(currentOption < nbOption) {
+                        while(c != '{') {
+                            c = fgetc(file);
+                        }
+                        int nameSize = getNameSize(file);
+                        actions[currentAction].options[currentOption].name = malloc(1 + nameSize * sizeof(char));
+                        int i = 0;
+                        //printf("\n----------------------------------------------------\n");
+                        while (c != '-') {
+                            actions[currentAction].options[currentOption].name[i] = c;
+                            //printf("%c", c);
+                            i++;
+                            c = fgetc(file);
+                        }/*
+                        actions[currentAction].options[currentOption].name[nameSize+1] = '\0';
+                        c = fgetc(file);
+                        int paramSize = getParamSize(file);
+                        actions[currentAction].options[currentOption].value = malloc(1 + paramSize * sizeof(char));
+                        while (c != '}') {
+                            actions[currentAction].options[currentOption].name[i] = c;
+                            i++;
+                            c = fgetc(file);
+                        }*/
+                        currentOption++;
+                    }
+                }
                 currentAction++;
             }
         }
@@ -136,6 +179,19 @@ int getParamSize(FILE *file) {
     }
     return result;
 
+}
+
+int getNameSize(FILE *file) {
+    char c = fgetc(file);
+    int result = 0;
+    while (c != '-') {
+        if (c != ' ') {
+            result++;
+        }
+        c = fgetc(file);
+    }
+    fgetc(file);
+    return result;
 }
 
 
