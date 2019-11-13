@@ -12,4 +12,5 @@ void getActionContent(FILE * file);
 int getActionNumber(char * string,int size);
 
 int getParamSize(FILE *file);
+int getNameSize(FILE *file);
 Action *fillActions(FILE *file, Action *actions, int sizeActions);

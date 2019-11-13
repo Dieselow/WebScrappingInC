@@ -166,6 +166,7 @@ Action *fillActions(FILE *file, Action *actions, int sizeActions) {
                         }
                         int paramSize = getParamSize(file);
                         fseek(file, startOption, SEEK_SET);
+                        c = fgetc(file);
                         while (c != '>') {
                             c = fgetc(file);
                         }
@@ -216,6 +217,12 @@ int getParamSize(FILE *file) {
 
 }
 
+
+/**
+ * This functions is used to get correct param's name size to malloc effectively
+ * @param FILE file
+ * @return int
+ */
 int getNameSize(FILE *file) {
     char c = fgetc(file);
     int result = 0;
