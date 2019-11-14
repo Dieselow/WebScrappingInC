@@ -3,6 +3,7 @@
 
 #include <windows.h>
 
+double getActualTimestamp();
 DWORD WINAPI ThreadFunc();
 void startThread();
 void stopThread();
