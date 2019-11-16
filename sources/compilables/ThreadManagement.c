@@ -8,10 +8,14 @@
 #include <windows.h>
 #include "../headers/ThreadManagement.h"
 #include "../headers/Color.h"
+#include "../headers/Task.h"
 #include "../headers/Application.h"
 
 static int status = 0;  // 0 if enable | 1 if enable
 static HANDLE thread;
+static Task* tasks;
+static int taskNumber;
+static int actionNumber;
 
 /**
  *  Return the actual timestamp
@@ -35,15 +39,20 @@ double getActualTimestamp(){
  */
 DWORD WINAPI ThreadFunc() {
     double actualTime;
-    double nextTime;    //It will be an element of the structure task
+    int i = 0;
      while(1){
         actualTime = getActualTimestamp();
-        if(actualTime >= nextTime){ //next time
-            /**
-            * TODO : Add here the code scrap from the conf file
-            */
+        for(i = 0; i < taskNumber; i++){
+            if(actualTime >= tasks[i].extTimeStamp){ //next time
+                /**
+                * TODO : Add here the code scrap from the conf file
+                */
+
+                printf("%s - ", tasks[i].actions[0].url);
+                tasks[i].extTimeStamp = calcNextTimeStamp(tasks[i]);
+            }
         }
-        Sleep(10000);   //wait for 10 seconds
+        Sleep(1000);   //wait for 1 seconds
      }
 
   return 0;
@@ -53,12 +62,14 @@ DWORD WINAPI ThreadFunc() {
  */
 void startThread(){
     if(status == 0){
-        thread = CreateThread(NULL, 0, ThreadFunc, NULL, 0, NULL);
-        if (thread) {
-            status = 1;
-            color(LIGHT_GREEN, BLACK);
-            printf("\n\t\t\t\t\tCron is now activate\n\n");
-            color(WHITE, BLACK);
+        if(initTasks() == 1){
+            thread = CreateThread(NULL, 0, ThreadFunc, NULL, 0, NULL);
+            if (thread) {
+                status = 1;
+                color(LIGHT_GREEN, BLACK);
+                printf("\n\t\t\t\t\tCron is now activate\n\n");
+                color(WHITE, BLACK);
+            }
         }
     } else {
         color(RED, BLACK);
@@ -83,5 +94,60 @@ void stopThread(){
         color(RED, BLACK);
         printf("\n\t\t\t\t\tCron Scrapping already Desactivate\n\n");
         color(WHITE, BLACK);
+    }
+}
+/**
+ *  Init the tasks
+ */
+int initTasks(){
+    FILE* file = fopen("ressources\\configuration\\conf.sconf","r");
+    if(file==NULL){
+        printf("error while loading configuration\n");
+        return 0;
+    }
+    fseek(file, 0, SEEK_END);
+    int size = ftell(file);
+    fseek(file, 0, SEEK_SET);
+    char* fileContent;
+    char c = 'a';
+    int counter = 0;
+    fileContent = malloc(sizeof(char) * size);
+    while (c != EOF) {
+        c = fgetc(file);
+        fileContent[counter] = c;
+        counter++;
+    }
+
+    taskNumber = getTaskNumber(fileContent, size);
+    actionNumber = getActionNumber(file, size);
+    tasks = getTaskContent(file);
+    fclose(file);
+
+    intitTasksTimestamp();
+    return 1;
+}
+/**
+ *  Calculation of the next time stamp for the task in argument
+ */
+double calcNextTimeStamp(Task t){
+    double timestamp  = getActualTimestamp();
+    if(t.hours != NULL){
+        timestamp += ((t.hours*60)*60);
+    }
+    if(t.minutes != NULL){
+        timestamp += (t.minutes*60);
+    }
+    if(t.seconds != NULL){
+        timestamp += t.seconds;
+    }
+    return timestamp;
+}
+/**
+ *  Initialize the timestamp for all the tasks
+ */
+void intitTasksTimestamp(){
+    int i = 0;
+    for(i = 0; i < taskNumber; i++){
+        tasks[i].extTimeStamp = calcNextTimeStamp(tasks[i]);
     }
 }

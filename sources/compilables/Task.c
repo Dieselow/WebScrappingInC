@@ -167,12 +167,14 @@ void fillTaskName(char *taskName, char c, FILE *file) {
 void fillTaskActionName(char *taskActionName,FILE *file){
     char line[256];
     fgets(line, sizeof(line), file);
-    for (int i = 0; i < sizeof(line); ++i) {
+    int i = 0;
+    for (i = 0; i < sizeof(line); ++i) {
         taskActionName[i] = line[i];
     }
 }
 void fillTaskAction(Task *tasks, Action *actions, int size) {
-    for (int i = 0; i < size; ++i) {
+    int i = 0;
+    for (i = 0; i < size; ++i) {
        char first[sizeof(tasks[i].actionName)];
        char second[sizeof(actions[i].name)];
        if (strstr(first,second)){
