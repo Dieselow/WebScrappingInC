@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-/* 
+/*
  * File:   Interface.h
  * Author: Mikadows
  *
@@ -23,7 +23,9 @@ extern "C" {
     void printExit();
     void printMenu(int i);
     void printSubMenu(int i);
-
+    void printSubMenuThread(int i);
+    void actionSelected(int i);
+    void subMenuStartThread();
 
 #ifdef __cplusplus
 }

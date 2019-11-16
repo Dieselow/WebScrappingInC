@@ -42,6 +42,7 @@ $$$$$$$$\ $$  /\$$\ $$ |  \$$$$  |
 #include "../headers/Color.h"
 #include "../headers/Interface.h"
 #include "../headers/CurlApp.h"
+#include "../headers/ThreadManagement.h"
 
 /**
  * Display the complete main menu
@@ -64,7 +65,7 @@ void mainMenu(){
                 i++;
                 //printf("DOWN\n");
                 break;
-            case '\r':    // code for arrow down
+            case '\r':    // code for enter
                 printSubMenu(i);
                 //printf("ENTER\n");
                 break;
@@ -168,12 +169,10 @@ void printSubMenu(int i){
             scanf("%s", url);
             fflush(stdin);      //Drop the \n in the buffer
             scrap(url);
+            system("pause");
             break;
         case 1:
-            system("cls");
-            printTitle();
-            printf("\n\t\t\t\t-------  Start Cron Scrapping -------\n");
-
+            subMenuStartThread();
             break;
         case 2:
             printf("\n\t\t\t\t\t-------  Onglet 3 -------\n");
@@ -184,5 +183,88 @@ void printSubMenu(int i){
             break;
 
     }
-    system("pause");
+}
+/**
+ * Print the sub menu for the thread
+ */
+void printSubMenuThread(int i){
+    system("cls");
+    printTitle();
+    switch(i){
+        case 0:
+            printf("\n\t\t\t\t\t-------  Cron Scrapping -------\n");
+            color(LIGHT_GREEN, BLACK);
+            printf("\n\t\t\t\t\t ==> ");
+            color(WHITE, BLACK);
+            printf("• Enable cron scrapping\n"
+                   "\t\t\t\t\t     • Disable cron scrapping\n");
+            color(GREY, BLACK);
+            printf("\n\n\t\t\t   (ESC to back, naviagte with up and down arrow)\n");
+            color(WHITE, BLACK);
+            break;
+        case 1:
+            printf("\n\t\t\t\t\t-------  Cron Scrapping -------\n");
+            printf("\n\t\t\t\t\t     • Enable cron scrapping\n"
+                   "\t\t\t\t\t");
+            color(LIGHT_GREEN, BLACK);
+            printf(" ==> ");
+            color(WHITE, BLACK);
+            printf("• Disable cron scrapping\n");
+            color(GREY, BLACK);
+            printf("\n\n\t\t\t   (ESC to back, naviagte with up and down arrow)\n");
+            color(WHITE, BLACK);
+            break;
+        default:
+            printf("ERROR BAD CALL MAIN MENU");
+            break;
+    }
+}
+/**
+ * Call the functions of the selected action
+ */
+void actionSelected(int i){
+        switch(i){
+        case 0:
+            startThread();
+            break;
+        case 1:
+            stopThread();
+            break;
+        default:
+            printf("ERROR BAD CALL SUB MENU");
+            break;
+    }
+}
+/**
+ * Selector for the menu
+ */
+void subMenuStartThread(){
+    int i = 0;
+    char c = NULL;
+    printSubMenuThread(i);
+    while(c != 27){     // code for ESC KEY
+        c= getch();
+        switch(c) {
+            case 72:    // code for arrow up
+                i--;
+                //printf("UP\n");
+                break;
+            case 80:    // code for arrow down
+                i++;
+                //printf("DOWN\n");
+                break;
+            case '\r':    // code for enter
+                actionSelected(i);
+                system("pause");
+                //printf("ENTER\n");
+                break;
+        }
+        if(i > 1){
+            i = 0;
+        } else if(i < 0){
+            i = 1;
+        }
+        printSubMenuThread(i);
+    }
+    system("cls");
 }

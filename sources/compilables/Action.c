@@ -41,7 +41,8 @@ Action *getActionContent(FILE *file) {
  */
 int getActionNumber(char *string, int size) {
     int result = 0;
-    for (int i = 0; i < size; i++) {
+    int i = 0;
+    for (i = 0; i < size; i++) {
         if (i == 0) {
             if (string[i] == '=' && string[i + 1] != '=') {
                 result++;
