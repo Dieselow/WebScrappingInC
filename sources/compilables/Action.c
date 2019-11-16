@@ -4,7 +4,7 @@
 
 #include "../headers/Action.h"
 
-void getActionContent(FILE *file) {
+Action *getActionContent(FILE *file) {
     char *fileContent;
     int size = 0;
     char c = fgetc(file);
@@ -13,7 +13,8 @@ void getActionContent(FILE *file) {
     fseek(file, 0, SEEK_END);
     size = ftell(file);
     if (size == 0) {
-        return;
+        printf("error while loading configuration file ");
+        return NULL;
     }
     fseek(file, 0, SEEK_SET);
     fileContent = malloc(sizeof(char) * size);
@@ -27,11 +28,8 @@ void getActionContent(FILE *file) {
     fseek(file, 0, SEEK_SET);
     Action *actions = malloc(sizeof(Action) * actionNumber);
     actions = fillActions(file, actions, actionNumber);
-    printf("%s\n", actions[0].name);
-    printf("%s\n", actions[0].url);
-    printf("%s\n", actions[1].name);
-    printf("%s", actions[1].url);
     free(fileContent);
+    return actions;
 
 }
 
@@ -66,8 +64,8 @@ Action *fillActions(FILE *file, Action *actions, int sizeActions) {
     char c = fgetc(file);
     int currentAction = 0;
     while (c != EOF) {
-        int counter = 0;
         if (c == '=') {
+            int counter = 0;
             c = fgetc(file);
             if (c != '=') {
                 c = fgetc(file);
@@ -81,15 +79,11 @@ Action *fillActions(FILE *file, Action *actions, int sizeActions) {
                 c = fgetc(file);
                 // this is the part for the name
                 if (counter == 1) {
-                    actions[currentAction].name = malloc(paramsSize * sizeof(char));
-                    int i = 0;
-                    while (c != '}') {
-                        actions[currentAction].name[i] = c;
-                        c = fgetc(file);
-                        i++;
-                    }
+                    actions[currentAction].name = malloc((paramsSize + 1) * sizeof(char));
+                    fillActionName(actions[currentAction].name, c, file);
                     counter++;
                 }
+                actions[currentAction].name[paramsSize] = '\0';
                 while (c != '>') {
                     c = fgetc(file);
                 }
@@ -99,19 +93,77 @@ Action *fillActions(FILE *file, Action *actions, int sizeActions) {
                 // this is the part for the url
                 if (counter == 2) {
                     fseek(file, startAction, SEEK_SET);
-                    actions[currentAction].url = malloc(paramsSize * sizeof(char));
-                    int i = 0;
-                    c = fgetc(file);
-                    while (c != '}') {
-                        actions[currentAction].url[i] = c;
-                        i++;
+                    actions[currentAction].url = malloc((paramsSize + 1) * sizeof(char));
+                    fillActionUrl(actions[currentAction].url, c, file);
+                    actions[currentAction].url[paramsSize] = '\0';
+                    counter++;
+                }
+                if (counter == 3) {
+                    while (c != '+') {
                         c = fgetc(file);
                     }
+                    while (c != '{') {
+                        c = fgetc(file);
+                    }
+                    int nbOption = 0;
+                    int startOption = ftell(file);
+                    while (c != '=' && c != EOF) {
+                        if (c == '{') {
+                            nbOption++;
+                        }
+                        c = fgetc(file);
+                    }
+                    c = fgetc(file);
+                    actions[currentAction].options = malloc(sizeof(Option) * nbOption);
+                    int currentOption = 0;
+                    fseek(file, startOption, SEEK_SET);
+                    while (currentOption < nbOption) {
+                        while (c != '{') {
+                            c = fgetc(file);
+                        }
+                        int nameSize = getNameSize(file);
+                        fseek(file, startOption, SEEK_SET);
+                        c = fgetc(file);
+                        actions[currentAction].options[currentOption].name = malloc((1 + nameSize) * sizeof(char));
+                        int i = 0;
+                        //printf("\n----------------------------------------------------\n");
+                        while (c != ' ') {
+                            actions[currentAction].options[currentOption].name[i] = c;
+                            //printf("%c", c);
+                            i++;
+                            c = fgetc(file);
+                        }
+                        actions[currentAction].options[currentOption].name[nameSize] = '\0';
+                        fseek(file, startOption, SEEK_SET);
+                        while (c != '>') {
+                            c = fgetc(file);
+                        }
+                        int paramSize = getParamSize(file);
+                        fseek(file, startOption, SEEK_SET);
+                        c = fgetc(file);
+                        while (c != '>') {
+                            c = fgetc(file);
+                        }
+                        actions[currentAction].options[currentOption].value = malloc((1 + paramSize) * sizeof(char));
+                        i = 0;
+                        while (c != '}') {
+                            if (c != ' ' && c != '>') {
+                                actions[currentAction].options[currentOption].value[i] = c;
+                                i++;
+                            }
+                            c = fgetc(file);
+                        }
+                        actions[currentAction].options[currentOption].value[paramSize] = '\0';
+                        currentOption++;
+                        if (currentOption < nbOption) {
+                            while (c != '{') {
+                                c = fgetc(file);
+                            }
+                            startOption = ftell(file);
+                        }
+                    }
+                    fseek(file, startOption, SEEK_SET);
                 }
-                /**
-                 * TO-DO
-                 * Implement options part
-                 */
                 currentAction++;
             }
         }
@@ -139,3 +191,43 @@ int getParamSize(FILE *file) {
 }
 
 
+/**
+ * This functions is used to get correct param's name size to malloc effectively
+ * @param FILE file
+ * @return int
+ */
+int getNameSize(FILE *file) {
+    char c = fgetc(file);
+    int result = 0;
+    while (c != '-') {
+        if (c != ' ') {
+            result++;
+        }
+        c = fgetc(file);
+    }
+    fgetc(file);
+    return result;
+}
+
+void fillActionName(char *actionName, char c, FILE *file) {
+    int i = 0;
+    while (c != '}') {
+        if (c != ' ') {
+            actionName[i] = c;
+            i++;
+        }
+        c = fgetc(file);
+    }
+}
+
+void fillActionUrl(char *actionUrl, char c, FILE *file) {
+    int i = 0;
+    c = fgetc(file);
+    while (c != '}') {
+        if (c != ' ') {
+            actionUrl[i] = c;
+            i++;
+        }
+        c = fgetc(file);
+    }
+}
