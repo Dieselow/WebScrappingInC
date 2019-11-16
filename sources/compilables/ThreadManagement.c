@@ -10,6 +10,7 @@
 #include "../headers/Color.h"
 #include "../headers/Task.h"
 #include "../headers/Application.h"
+#include "../headers/CurlApp.h"
 
 static int status = 0;  // 0 if enable | 1 if enable
 static HANDLE thread;
@@ -40,14 +41,14 @@ double getActualTimestamp(){
 DWORD WINAPI ThreadFunc() {
     double actualTime;
     int i = 0;
+    int y = 0;
      while(1){
         actualTime = getActualTimestamp();
         for(i = 0; i < taskNumber; i++){
             if(actualTime >= tasks[i].extTimeStamp){ //next time
-                /**
-                * TODO : Add here the code scrap from the conf file
-                */
-
+                //for(y = 0; y < tasks[i].actionNumber; y++){ //For each action scrap the site
+                //    scrap(tasks[i].actions[y].url);
+                //}
                 printf("%s - ", tasks[i].actions[0].url);
                 tasks[i].extTimeStamp = calcNextTimeStamp(tasks[i]);
             }
