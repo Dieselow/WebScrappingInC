@@ -15,5 +15,4 @@ int getParamSize(FILE *file);
 int getNameSize(FILE *file);
 void fillActionName(char *actionName,char c,FILE *file);
 void fillActionUrl(char * actionUrl,char c,FILE *file);
-int getOptionNumber(FILE *file,char c);
 Action *fillActions(FILE *file, Action *actions, int sizeActions);

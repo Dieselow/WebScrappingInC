@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include "sources/headers/FileParser.h"
 #include "sources/headers/Action.h"
+#include "sources/headers/Task.h"
 #include "sources/headers/Application.h"
 
 int main(int argc,char ** argv){
@@ -14,7 +15,7 @@ int main(int argc,char ** argv){
         return 0;
     }
 
-    getActionContent(file);
+    getTaskContent(file);
     fclose(file);
 
     return 0;
