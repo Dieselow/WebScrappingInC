@@ -20,5 +20,6 @@ typedef struct Task {
     int seconds;
     int minutes;
     int hours;
+    char *actionName;
 } Task;
 #endif //WEBSCRAPPINGINC_FILEPARSER_H

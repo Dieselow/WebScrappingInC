@@ -15,7 +15,8 @@ int main(int argc,char ** argv){
         return 0;
     }
 
-    getTaskContent(file);
+    Task * tasks =getTaskContent(file);
+
     fclose(file);
 
     return 0;

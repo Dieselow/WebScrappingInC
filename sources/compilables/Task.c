@@ -6,7 +6,7 @@
 #include "../headers/Action.h"
 #include <ctype.h>
 
-void getTaskContent(FILE *file) {
+Task *getTaskContent(FILE *file) {
     char *fileContent;
     int size = 0;
     char c = fgetc(file);
@@ -30,12 +30,12 @@ void getTaskContent(FILE *file) {
     int actionNumber = getActionNumber(file, size);
     fseek(file, 0, SEEK_SET);
     Action *actions = malloc(sizeof(Action) * actionNumber);
-    actions = fillActions(file,actions,actionNumber);
+    actions = getActionContent(file);
     Task *tasks = malloc(sizeof(Task) * taskNumber);
     fseek(file, 0, SEEK_SET);
     tasks = fillTasks(file, tasks);
     fillTaskAction(tasks,actions,taskNumber);
-    printf("%s",tasks[0].actions[0].name);
+    return tasks;
 }
 
 
@@ -87,11 +87,14 @@ Task *fillTasks(FILE *file, Task *tasks) {
                 tasks[currentAction].name = malloc((paramsSize + 1) * sizeof(char));
                 fillTaskName(tasks[currentAction].name, c, file);
                 tasks[currentAction].name[paramsSize] = '\0';
+                tasks[currentAction].seconds = NULL;
+                tasks[currentAction].minutes = NULL;
+                tasks[currentAction].hours =NULL;
                 while (c != '+') {
                     char line[256];
                     fgets(line, sizeof(line), file);
                     char *temp = line;
-                    if (strstr(line, "second")) {
+                    if (strstr(line, "second")!=NULL) {
                         while (*temp) {
                             if (isdigit(*temp)) {
                                 tasks[currentAction].seconds = (int) strtol(temp, &temp, 10);
@@ -100,7 +103,7 @@ Task *fillTasks(FILE *file, Task *tasks) {
                             }
                         }
                     }
-                    if (strstr(line, "minute")) {
+                    if (strstr(line, "minute")!=NULL) {
                         while (*temp) {
                             if (isdigit(*temp)) {
                                 tasks[currentAction].minutes = (int) strtol(temp, &temp, 10);
@@ -109,7 +112,7 @@ Task *fillTasks(FILE *file, Task *tasks) {
                             }
                         }
                     }
-                    if (strstr(line, "hour")) {
+                    if (strstr(line, "hour")!=NULL) {
                         while (*temp) {
                             if (isdigit(*temp)) {
                                 tasks[currentAction].hours = (int) strtol(temp, &temp, 10);
@@ -120,7 +123,29 @@ Task *fillTasks(FILE *file, Task *tasks) {
                     }
                     c = fgetc(file);
                 }
-
+                c=fgetc(file);
+                int start = ftell(file);
+                int sizeActionName = 0;
+                c = fgetc(file);
+                while(c!=')'){
+                    if (c!=' '){
+                        sizeActionName++;
+                    }
+                    c=fgetc(file);
+                }
+                fseek(file,start,SEEK_SET);
+                c=fgetc(file);
+                tasks[currentAction].actionName = malloc(sizeof(char)*sizeActionName-1);
+                int i=0;
+                c=fgetc(file);
+                while (c != ')') {
+                    if (c != ' ') {
+                        tasks[currentAction].actionName[i] = c;
+                        i++;
+                    }
+                    c = fgetc(file);
+                }
+                tasks[currentAction].actionName[sizeActionName-1] = '\n';
                 currentAction++;
             }
         }
@@ -139,15 +164,19 @@ void fillTaskName(char *taskName, char c, FILE *file) {
         c = fgetc(file);
     }
 }
-
+void fillTaskActionName(char *taskActionName,FILE *file){
+    char line[256];
+    fgets(line, sizeof(line), file);
+    for (int i = 0; i < sizeof(line); ++i) {
+        taskActionName[i] = line[i];
+    }
+}
 void fillTaskAction(Task *tasks, Action *actions, int size) {
     for (int i = 0; i < size; ++i) {
-        for (int j = i + 1; j < size; ++j) {
-            if (strcmp(actions[i].name, tasks[j].name) == 0) {
-                tasks[j].actions->name = actions[i].name;
-                tasks[j].actions->url = actions[i].url;
-                tasks[j].actions->options = actions[i].options;
-            }
-        }
+       char first[sizeof(tasks[i].actionName)];
+       char second[sizeof(actions[i].name)];
+       if (strstr(first,second)){
+           tasks[i].actions = &actions[i];
+       }
     }
 }

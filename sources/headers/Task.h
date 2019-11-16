@@ -4,11 +4,20 @@
 
 #ifndef WEBSCRAPPINGINC_TASK_H
 #define WEBSCRAPPINGINC_TASK_H
+
 #include "FileParser.h"
 #include "Action.h"
-void getTaskContent(FILE *file);
-int getTaskNumber(char *string,int size);
+
+Task *getTaskContent(FILE *file);
+
+int getTaskNumber(char *string, int size);
+
 Task *fillTasks(FILE *file, Task *tasks);
+
 void fillTaskName(char *taskName, char c, FILE *file);
+
 void fillTaskAction(Task *tasks, Action *actions, int size);
+
+void fillTaskActionName(char *taskActionName, FILE *file);
+
 #endif //WEBSCRAPPINGINC_TASK_H
