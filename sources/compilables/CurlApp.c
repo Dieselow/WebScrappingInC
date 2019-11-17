@@ -107,7 +107,7 @@ void saveIntoFile(char* str, char* url){
     if(f != NULL){
         fprintf(f, str);
         color(LIGHT_GREEN, BLACK);
-        printf("\n\t\t\t\t\Site Scrapped\n");
+        printf("\n\t\t\t\t\tSite Scrapped\n");
         color(WHITE, BLACK);
     } else {
         color(RED, BLACK);

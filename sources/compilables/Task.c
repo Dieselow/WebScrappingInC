@@ -147,7 +147,7 @@ Task *fillTasks(FILE *file, Task *tasks) {
                     }
                     c = fgetc(file);
                 }
-                tasks[currentAction].actionName[sizeActionName-1] = '\n';
+                tasks[currentAction].actionName[sizeActionName-1] = '\0';
                 currentAction++;
             }
         }
