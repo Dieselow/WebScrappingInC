@@ -48,9 +48,8 @@ DWORD WINAPI ThreadFunc() {
             if(actualTime >= tasks[i].extTimeStamp){ //next time
                 //printf("%d", tasks[i].actionNumber);
                 for(y = 0; y < tasks[i].actionNumber; y++){ //For each action scrap the site
-                    //printf("%s\n", tasks[i].actions[y].url);
+                    printf("%s\n", tasks[i].actions[y].url);
                     scrap(tasks[i].actions[y].url);
-
                 }
                 //printf("\n%s - ", tasks[i].actions[0].url);
                 tasks[i].extTimeStamp = calcNextTimeStamp(tasks[i]);
@@ -106,19 +105,14 @@ void stopThread(){
  */
 int initTasks(){
     if(init == 0){
-        FILE* file = fopen("C:\\Users\\Gwend\\Documents\\Cours\\ESGI\\C\\WebScrappingInC\\ressources\\configuration\\conf.sconf","r");
+        FILE* file = fopen("ressources\\configuration\\conf.sconf","r");
         if(file==NULL){
             printf("error while loading configuration");
             return 0;
         }
 
         tasks = getTaskContent(file);
-/*
-        //printf("%s\n", tasks[0].actionName);
-        printf("%s\n", tasks[0].actions[0].url);
-        printf("%d\n", tasks[0].actionNumber);
-        system("pause");
-*/
+
         fseek(file, 0, SEEK_END);
         int size = ftell(file);
         fseek(file, 0, SEEK_SET);
@@ -131,7 +125,6 @@ int initTasks(){
             fileContent[counter] = c;
             counter++;
         }
-
         taskNumber = getTaskNumber(fileContent, size);
         fclose(file);
 
