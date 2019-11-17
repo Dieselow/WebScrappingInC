@@ -16,7 +16,7 @@ Task *getTaskContent(FILE *file) {
     size = ftell(file);
     if (size == 0) {
         printf("error while loading configuration file ");
-        return;
+        return NULL;
     }
     fseek(file, 0, SEEK_SET);
     fileContent = malloc(sizeof(char) * size);
@@ -27,14 +27,16 @@ Task *getTaskContent(FILE *file) {
 
     }
     taskNumber = getTaskNumber(fileContent, size);
-    int actionNumber = getActionNumber(file, size);
+    int actionNumber = getActionNumber(fileContent, size);
     fseek(file, 0, SEEK_SET);
     Action *actions = malloc(sizeof(Action) * actionNumber);
     actions = getActionContent(file);
     Task *tasks = malloc(sizeof(Task) * taskNumber);
     fseek(file, 0, SEEK_SET);
     tasks = fillTasks(file, tasks);
-    fillTaskAction(tasks,actions,taskNumber);
+    fillTaskAction(tasks,actions,taskNumber,actionNumber);
+    free(actions);
+    free(fileContent);
     return tasks;
 }
 
@@ -172,13 +174,16 @@ void fillTaskActionName(char *taskActionName,FILE *file){
         taskActionName[i] = line[i];
     }
 }
-void fillTaskAction(Task *tasks, Action *actions, int size) {
+void fillTaskAction(Task *tasks, Action *actions, int size,int actionSize) {
     int i = 0;
     for (i = 0; i < size; ++i) {
-       char first[sizeof(tasks[i].actionName)];
-       char second[sizeof(actions[i].name)];
-       if (strstr(first,second)){
-           tasks[i].actions = &actions[i];
-       }
+        tasks[i].actionNumber = 0;
+        for (int j = 0; j < actionSize; ++j) {
+            if (strstr(tasks[i].actionName,actions[j].name)){
+                tasks[i].actions = &actions[i];
+                tasks[i].actionNumber++;
+            }
+        }
+
     }
 }

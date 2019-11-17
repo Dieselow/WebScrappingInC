@@ -16,7 +16,7 @@ Task *fillTasks(FILE *file, Task *tasks);
 
 void fillTaskName(char *taskName, char c, FILE *file);
 
-void fillTaskAction(Task *tasks, Action *actions, int size);
+void fillTaskAction(Task *tasks, Action *actions, int size,int ActionSize);
 
 void fillTaskActionName(char *taskActionName, FILE *file);
 

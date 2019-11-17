@@ -16,7 +16,8 @@ int main(int argc,char ** argv){
     }
 
     Task * tasks =getTaskContent(file);
-
+    printf("%s",tasks[0].actions[0].name);
+    printf("%d",tasks[1].actionNumber);
     fclose(file);
 
     return 0;
