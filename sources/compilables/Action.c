@@ -231,4 +231,5 @@ void fillActionUrl(char *actionUrl, char c, FILE *file) {
         }
         c = fgetc(file);
     }
+    actionUrl[i+1] = '\0';
 }
