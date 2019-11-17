@@ -178,7 +178,8 @@ void fillTaskAction(Task *tasks, Action *actions, int size,int actionSize) {
     int i = 0;
     for (i = 0; i < size; ++i) {
         tasks[i].actionNumber = 0;
-        for (int j = 0; j < actionSize; ++j) {
+        int j = 0;
+        for (j = 0; j < actionSize; ++j) {
             if (strstr(tasks[i].actionName,actions[j].name)){
                 tasks[i].actions = &actions[i];
                 tasks[i].actionNumber++;

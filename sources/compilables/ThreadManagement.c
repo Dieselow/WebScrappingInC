@@ -13,10 +13,10 @@
 #include "../headers/CurlApp.h"
 
 static int status = 0;  // 0 if enable | 1 if enable
+static int init = 0;
 static HANDLE thread;
 static Task* tasks;
 static int taskNumber;
-static int actionNumber;
 
 /**
  *  Return the actual timestamp
@@ -42,17 +42,21 @@ DWORD WINAPI ThreadFunc() {
     double actualTime;
     int i = 0;
     int y = 0;
-     while(1){
+    while(1){
         actualTime = getActualTimestamp();
         for(i = 0; i < taskNumber; i++){
             if(actualTime >= tasks[i].extTimeStamp){ //next time
-                //for(y = 0; y < tasks[i].actionNumber; y++){ //For each action scrap the site
-                //    scrap(tasks[i].actions[y].url);
-                //}
-                printf("%s - ", tasks[i].actions[0].url);
+                //printf("%d", tasks[i].actionNumber);
+                for(y = 0; y < tasks[i].actionNumber; y++){ //For each action scrap the site
+                    //printf("%s\n", tasks[i].actions[y].url);
+                    scrap(tasks[i].actions[y].url);
+
+                }
+                //printf("\n%s - ", tasks[i].actions[0].url);
                 tasks[i].extTimeStamp = calcNextTimeStamp(tasks[i]);
             }
         }
+
         Sleep(1000);   //wait for 1 seconds
      }
 
@@ -101,30 +105,41 @@ void stopThread(){
  *  Init the tasks
  */
 int initTasks(){
-    FILE* file = fopen("ressources\\configuration\\conf.sconf","r");
-    if(file==NULL){
-        printf("error while loading configuration\n");
-        return 0;
-    }
-    fseek(file, 0, SEEK_END);
-    int size = ftell(file);
-    fseek(file, 0, SEEK_SET);
-    char* fileContent;
-    char c = 'a';
-    int counter = 0;
-    fileContent = malloc(sizeof(char) * size);
-    while (c != EOF) {
-        c = fgetc(file);
-        fileContent[counter] = c;
-        counter++;
+    if(init == 0){
+        FILE* file = fopen("C:\\Users\\Gwend\\Documents\\Cours\\ESGI\\C\\WebScrappingInC\\ressources\\configuration\\conf.sconf","r");
+        if(file==NULL){
+            printf("error while loading configuration");
+            return 0;
+        }
+
+        tasks = getTaskContent(file);
+/*
+        //printf("%s\n", tasks[0].actionName);
+        printf("%s\n", tasks[0].actions[0].url);
+        printf("%d\n", tasks[0].actionNumber);
+        system("pause");
+*/
+        fseek(file, 0, SEEK_END);
+        int size = ftell(file);
+        fseek(file, 0, SEEK_SET);
+        char* fileContent;
+        char c = 'a';
+        int counter = 0;
+        fileContent = malloc(sizeof(char) * size);
+        while (c != EOF) {
+            c = fgetc(file);
+            fileContent[counter] = c;
+            counter++;
+        }
+
+        taskNumber = getTaskNumber(fileContent, size);
+        fclose(file);
+
+        intitTasksTimestamp();
+
+        init = 1;
     }
 
-    taskNumber = getTaskNumber(fileContent, size);
-    actionNumber = getActionNumber(file, size);
-    tasks = getTaskContent(file);
-    fclose(file);
-
-    intitTasksTimestamp();
     return 1;
 }
 /**

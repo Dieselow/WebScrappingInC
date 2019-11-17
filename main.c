@@ -9,16 +9,19 @@
 #include "sources/headers/Application.h"
 
 int main(int argc,char ** argv){
-    FILE* file = fopen("C:\\Users\\Retr0\\Documents\\GitHub\\WebScrappingInC\\ressources\\configuration\\conf.sconf","r");
+/*
+    FILE* file = fopen("ressources\\configuration\\conf.sconf","r");
     if(file==NULL){
         printf("error while loading configuration");
         return 0;
     }
 
     Task * tasks =getTaskContent(file);
-    printf("%s",tasks[0].actions[0].name);
-    printf("%d",tasks[1].actionNumber);
+    printf("%s\n",tasks[0].actions[1].url);
+    printf("%d\n",tasks[0].actionNumber);
     fclose(file);
+*/
+    start();
 
     return 0;
 }
